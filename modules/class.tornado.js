@@ -61,7 +61,7 @@ module.exports = class Tornado {
         }
     }
 
-    eat(tornadoArr, grassArr, grassEaterArr, xotakerEaterArr, matrix, grassLifeArr, grassEaterLifeArr, xotakerEaterLifeArr) {
+    eat(tornadoArr, grassArr, grassEaterArr, PredatorArr, matrix, grassLifeArr, grassEaterLifeArr, PredatorLifeArr) {
         var fundCords = this.chooseCell(4, 1, 2, 3, matrix);
         var cord = this.random(fundCords);
 
@@ -86,10 +86,10 @@ module.exports = class Tornado {
                 }
             }
             else if (matrix[y][x] == 3) {
-                for (var i in xotakerEaterArr) {
-                    if (x == xotakerEaterArr[i].x && y == xotakerEaterArr[i].y) {
-                        xotakerEaterArr.splice(i, 1);
-                        xotakerEaterLifeArr[1]++;
+                for (var i in PredatorArr) {
+                    if (x == PredatorArr[i].x && y == PredatorArr[i].y) {
+                        PredatorArr.splice(i, 1);
+                        PredatorLifeArr[1]++;
                     }
                 }
             }

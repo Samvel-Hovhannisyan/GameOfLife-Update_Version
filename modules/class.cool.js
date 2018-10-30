@@ -56,7 +56,7 @@ module.exports = class Cool {
         return found;
     }
 
-    eat(xotakerEaterArr, matrix, xotakerEaterLifeArr) {
+    eat(PredatorArr, matrix, PredatorLifeArr) {
         var emptyCellsx = this.chooseCell(3, matrix);
         var a = [];
         for (var i = 0; i < emptyCellsx.length; i++) {
@@ -68,10 +68,10 @@ module.exports = class Cool {
             var newX = newCellxy[0];
             var newY = newCellxy[1];
             matrix[newY][newX] = 0
-            for (var i in xotakerEaterArr) {
-                if (newX == xotakerEaterArr[i].x && newY == xotakerEaterArr[i].y) {
-                    xotakerEaterArr.splice(i, 1);
-                    xotakerEaterLifeArr[1]++;
+            for (var i in PredatorArr) {
+                if (newX == PredatorArr[i].x && newY == PredatorArr[i].y) {
+                    PredatorArr.splice(i, 1);
+                    PredatorLifeArr[1]++;
                     break;
                 }
             }
