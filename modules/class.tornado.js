@@ -49,6 +49,9 @@ module.exports = class Tornado {
             else if (matrix[y][x] == 2) {
                 matrix[this.y][this.x] = 2;
             }
+            else if (matrix[y][x] == -2) {
+                matrix[this.y][this.x] = -2;
+            }
             else if (matrix[y][x] == 3) {
                 matrix[this.y][this.x] = 3;
             }
@@ -61,7 +64,7 @@ module.exports = class Tornado {
         }
     }
 
-    eat(tornadoArr, grassArr, grassEaterArr, PredatorArr, matrix, grassLifeArr, grassEaterLifeArr, PredatorLifeArr) {
+    eat(tornadoArr, grassArr, GrassEaterMaleArr, GrassEaterFemaleArr, PredatorArr, matrix, grassLifeArr, GrassEaterMaleLifeArr, GrassEaterFemaleLifeArr, PredatorLifeArr) {
         var fundCords = this.chooseCell(4, 1, 2, 3, matrix);
         var cord = this.random(fundCords);
 
@@ -78,10 +81,18 @@ module.exports = class Tornado {
                 }
             }
             else if (matrix[y][x] == 2) {
-                for (var i in grassEaterArr) {
-                    if (x == grassEaterArr[i].x && y == grassEaterArr[i].y) {
-                        grassEaterArr.splice(i, 1);
-                        grassEaterLifeArr[1]++;
+                for (var i in GrassEaterMaleArr) {
+                    if (x == GrassEaterMaleArr[i].x && y == GrassEaterMaleArr[i].y) {
+                        GrassEaterMaleArr.splice(i, 1);
+                        GrassEaterMaleLifeArr[1]++;
+                    }
+                }
+            }
+            else if (matrix[y][x] == -2) {
+                for (var i in GrassEaterFemaleArr) {
+                    if (x == GrassEaterFemaleArr[i].x && y == GrassEaterFemaleArr[i].y) {
+                        GrassEaterFemaleArr.splice(i, 1);
+                        GrassEaterFemaleLifeArr[1]++;
                     }
                 }
             }

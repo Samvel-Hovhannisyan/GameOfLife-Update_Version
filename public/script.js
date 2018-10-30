@@ -63,6 +63,10 @@ function draw() {
                 rect(x * side, y * side, side, side);
             }
             else if (matrix[y][x] == 2) {
+                fill('#ffaa00');
+                rect(x * side, y * side, side, side);
+            }
+            else if (matrix[y][x] == -2) {
                 fill('yellow');
                 rect(x * side, y * side, side, side);
             }
@@ -88,5 +92,5 @@ function draw() {
 
     fill("black")
     textSize(20)
-    text("Game of life", 600, 30)
+    text("Game Of Life", 600, 30)
 }

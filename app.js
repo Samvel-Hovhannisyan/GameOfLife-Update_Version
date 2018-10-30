@@ -11,7 +11,8 @@ var io = require("socket.io")(server);
 ////////////////////////////////////////////////////////
 
 var Grass = require("./modules/class.grass.js");
-var GrassEater = require("./modules/class.grasseater.js");
+var GrassEaterMale = require("./modules/class.GrassEaterMale.js");
+var GrassEaterFemale = require("./modules/class.GrassEaterFemale.js");
 var Predator = require("./modules/class.predator.js");
 var Cool = require("./modules/class.cool.js");
 var Tornado = require("./modules/class.tornado.js");
@@ -20,7 +21,8 @@ var Water = require("./modules/class.water.js");
 ////////////////////////////////////////////////////////
 
 var grassArr = [];
-var grassEaterArr = [];
+var GrassEaterMaleArr = [];
+var GrassEaterFemaleArr = [];
 var PredatorArr = [];
 var coolArr = [];
 var tornadoArr = [];
@@ -29,7 +31,8 @@ var waterArr = [];
 ////////////////////////////////////////////////////////
 
 var grassLifeArr = [0, 0];
-var grassEaterLifeArr = [0, 0];
+var GrassEaterMaleLifeArr = [0, 0];
+var GrassEaterFemaleLifeArr = [0, 0];
 var PredatorLifeArr = [0, 0];
 var tornadoLifeArr = [0, 0];
 var coolLifeArr = [0, 0];
@@ -51,7 +54,10 @@ for (var y = 0; y < matrix.length; y++) {
       grassArr.push(new Grass(x, y, 1, matrix));
     }
     else if (matrix[y][x] == 2) {
-      grassEaterArr.push(new GrassEater(x, y, 2, matrix));
+      GrassEaterMaleArr.push(new GrassEaterMale(x, y, 2, matrix));
+    }
+    else if (matrix[y][x] == -2) {
+      GrassEaterFemaleArr.push(new GrassEaterFemale(x, y, -2, matrix));
     }
     else if (matrix[y][x] == 3) {
       PredatorArr.push(new Predator(x, y, 3, matrix));
@@ -70,15 +76,6 @@ for (var y = 0; y < matrix.length; y++) {
 
 ////////////////////////////////////////////////////////
 
-grassLifeArr[0] += grassArr.length;
-grassEaterLifeArr[0] += grassEaterArr.length;
-PredatorLifeArr[0] += PredatorArr.length;
-tornadoLifeArr[0] += tornadoArr.length;
-coolLifeArr[0] += coolArr.length;
-waterLifeArr[0] += waterArr.length;
-
-////////////////////////////////////////////////////////
-
 app.use(express.static('public'));
 
 app.get('/', function (req, res) {
@@ -91,30 +88,33 @@ var frameRate = 5;
 var drawTime = 1000 / frameRate;
 var FrameCount = 0;
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////
 
 
 
 io.on("connection", function (socket) {
   socket.emit("get matrix", matrix);
 
-  genStatistics();
+  // genStatistics();
 
   var Interval = setInterval(function () {
     for (var i in grassArr) {
       grassArr[i].mul(grassArr, matrix, grassLifeArr);
     }
-    for (var i in grassEaterArr) {
-      grassEaterArr[i].eat(grassEaterArr, grassArr, matrix, grassLifeArr, grassEaterLifeArr);
+    for (var i in GrassEaterMaleArr) {
+      GrassEaterMaleArr[i].eat(GrassEaterMaleArr, grassArr, matrix, grassLifeArr, GrassEaterMaleLifeArr);
+    }
+    for (var i in GrassEaterFemaleArr) {
+      GrassEaterFemaleArr[i].eat(GrassEaterFemaleArr, grassArr, matrix, grassLifeArr, GrassEaterFemaleLifeArr);
     }
     for (var i in PredatorArr) {
-      PredatorArr[i].eat(PredatorArr, grassEaterArr, matrix, grassEaterLifeArr, PredatorLifeArr);
+      PredatorArr[i].eat(PredatorArr, GrassEaterMaleArr, GrassEaterFemaleArr, matrix, GrassEaterMaleLifeArr, GrassEaterFemaleLifeArr, PredatorLifeArr);
     }
     for (var i in coolArr) {
       coolArr[i].eat(PredatorArr, matrix, PredatorLifeArr);
     }
     for (var i in tornadoArr) {
-      tornadoArr[i].eat(tornadoArr, grassArr, grassEaterArr, PredatorArr, matrix, grassLifeArr, grassEaterLifeArr, PredatorLifeArr);
+      tornadoArr[i].eat(tornadoArr, grassArr, GrassEaterMaleArr, GrassEaterFemaleArr, PredatorArr, matrix, grassLifeArr, GrassEaterMaleLifeArr, GrassEaterFemaleLifeArr, PredatorLifeArr);
     }
     for (var i in waterArr) {
       waterArr[i].mul(waterArr, matrix, waterLifeArr);
@@ -130,28 +130,41 @@ io.on("connection", function (socket) {
 
     FrameCount++;
     if (FrameCount >= 60) {
-      genStatistics();
+      // genStatistics();
 
       FrameCount = 0;
     }
 
   }, drawTime);
 
-  function genStatistics() {
-    var Statistics = {
-      "Grass": grassArr.length, "Grass-Alive": grassLifeArr[0], "Grass-Dead": grassLifeArr[1],
-      "GrassEater": grassEaterArr.length, "GrassEater-Alive": grassEaterLifeArr[0], "GrassEater-Dead": grassEaterLifeArr[1],
-      "Predator": PredatorArr.length, "Predator-Alive": PredatorLifeArr[0], "Predator-Dead": PredatorLifeArr[1],
-      "Tornado": tornadoArr.length, "Tornado-Alive": tornadoLifeArr[0], "Tornado-Dead": tornadoLifeArr[1],
-      "Cool": coolArr.length, "Cool-Alive": coolLifeArr[0], "Cool-Dead": coolLifeArr[1],
-      "Water": waterArr.length, "Water-Alive": waterLifeArr[0], "Water-Dead": waterLifeArr[1],
-    }
-    socket.emit("Right Statistics", Statistics);
-    main(Statistics);
-  }
+  ////////////////////////////////////////////////////////
 
-  function main(stat) {
-    myJSON = JSON.stringify(stat);
-    fs.writeFileSync("Statistics.json", myJSON)
-  }
+  grassLifeArr[0] += grassArr.length;
+  GrassEaterMaleLifeArr[0] += GrassEaterMaleArr.length;
+  GrassEaterFemaleLifeArr[0] += GrassEaterFemaleArr.length;
+  PredatorLifeArr[0] += PredatorArr.length;
+  tornadoLifeArr[0] += tornadoArr.length;
+  coolLifeArr[0] += coolArr.length;
+  waterLifeArr[0] += waterArr.length;
+
+  ////////////////////////////////////////////////////////
+
+  // function genStatistics() {
+  //   var Statistics = {
+  //     "Grass": grassArr.length, "Grass-Alive": grassLifeArr[0], "Grass-Dead": grassLifeArr[1],
+  //     "GrassEaterMale": GrassEaterMaleArr.length, "GrassEaterMale-Alive": GrassEaterMaleLifeArr[0], "GrassEaterMale-Dead": GrassEaterMaleLifeArr[1],
+  //     "GrassEaterFemale": GrassEaterFemaleArr.length, "GrassEaterFemale-Alive": GrassEaterFemaleLifeArr[0], "GrassEaterFemale-Dead": GrassEaterFemaleLifeArr[1],
+  //     "Predator": PredatorArr.length, "Predator-Alive": PredatorLifeArr[0], "Predator-Dead": PredatorLifeArr[1],
+  //     "Tornado": tornadoArr.length, "Tornado-Alive": tornadoLifeArr[0], "Tornado-Dead": tornadoLifeArr[1],
+  //     "Cool": coolArr.length, "Cool-Alive": coolLifeArr[0], "Cool-Dead": coolLifeArr[1],
+  //     "Water": waterArr.length, "Water-Alive": waterLifeArr[0], "Water-Dead": waterLifeArr[1],
+  //   }
+  //   socket.emit("Right Statistics", Statistics);
+  //   main(Statistics);
+  // }
+
+  // function main(stat) {
+  //   myJSON = JSON.stringify(stat);
+  //   fs.writeFileSync("Statistics.json", myJSON)
+  // }
 });
