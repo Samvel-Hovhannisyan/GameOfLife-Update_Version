@@ -41,14 +41,14 @@ module.exports = class Cool {
         ];
     }
 
-    chooseCell(character, matrix) {
+    chooseCell(character1, character2, matrix) {
         this.getNewCoordinates();
         var found = [];
         for (var i in this.direction) {
             var x = this.direction[i][0];
             var y = this.direction[i][1];
             if (x >= 0 && x < matrix[0].length && y >= 0 && y < matrix.length) {
-                if (matrix[y][x] == character) {
+                if (matrix[y][x] == character1 || matrix[y][x] == character2) {
                     found.push(this.direction[i]);
                 }
             }
@@ -56,8 +56,8 @@ module.exports = class Cool {
         return found;
     }
 
-    eat(PredatorArr, matrix, PredatorLifeArr) {
-        var emptyCellsx = this.chooseCell(3, matrix);
+    eat(PredatorMaleArr, PredatorFemaleArr, matrix, PredatorMaleLifeArr, PredatorFemaleLifeArr) {
+        var emptyCellsx = this.chooseCell(3, -3, matrix);
         var a = [];
         for (var i = 0; i < emptyCellsx.length; i++) {
             a.push(emptyCellsx[i]);
@@ -68,10 +68,17 @@ module.exports = class Cool {
             var newX = newCellxy[0];
             var newY = newCellxy[1];
             matrix[newY][newX] = 0
-            for (var i in PredatorArr) {
-                if (newX == PredatorArr[i].x && newY == PredatorArr[i].y) {
-                    PredatorArr.splice(i, 1);
-                    PredatorLifeArr[1]++;
+            for (var i in PredatorMaleArr) {
+                if (newX == PredatorMaleArr[i].x && newY == PredatorMaleArr[i].y) {
+                    PredatorMaleArr.splice(i, 1);
+                    PredatorMaleLifeArr[1]++;
+                    break;
+                }
+            }
+            for (var i in PredatorFemaleArr) {
+                if (newX == PredatorFemaleArr[i].x && newY == PredatorFemaleArr[i].y) {
+                    PredatorFemaleArr.splice(i, 1);
+                    PredatorFemaleLifeArr[1]++;
                     break;
                 }
             }

@@ -17,7 +17,7 @@ function setup() {
             redraw();
         })
 
-        socket.on("Right Statistics", function(Statistics){
+        socket.on("Right Statistics", function (Statistics) {
             stat = Statistics;
         })
     });
@@ -32,15 +32,15 @@ function draw() {
     var margin = 60;
     var N = 0;
     var Nx = 420;
-    for(var i in stat){
+    for (var i in stat) {
         textSize(15);
         start = true;
 
         N++;
-        if(N != 2 && N!= 3){
+        if (N != 2 && N != 3) {
             text(i + ":" + stat[i], Nx, margin);
         }
-        else{
+        else {
             fill(50);
             text(stat[i], Nx, margin);
         }
@@ -71,6 +71,10 @@ function draw() {
                 rect(x * side, y * side, side, side);
             }
             else if (matrix[y][x] == 3) {
+                fill('#bfbfbf');
+                rect(x * side, y * side, side, side);
+            }
+            else if (matrix[y][x] == -3) {
                 fill('white');
                 rect(x * side, y * side, side, side);
             }

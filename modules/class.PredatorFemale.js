@@ -1,4 +1,4 @@
-module.exports = class Predator {
+module.exports = class PredatorFemale {
     constructor(x, y, index) {
         this.x = x;
         this.y = y;
@@ -36,7 +36,7 @@ module.exports = class Predator {
         var Item = Arr[Math.floor(Math.random() * Arr.length)];
         return Item;
     }
-    move(PredatorArr, matrix) {
+    move(PredatorMaleArr, matrix) {
         var fundCords = this.chooseCell(0, 1, 99, matrix);
         var cord = this.random(fundCords);
 
@@ -49,30 +49,30 @@ module.exports = class Predator {
             else if (matrix[y][x] == 1) {
                 matrix[this.y][this.x] = 1;
             }
-            matrix[y][x] = 3;
+            matrix[y][x] = -3;
 
 
             this.x = x;
             this.y = y;
         }
         if (this.energy < 1) {
-            this.die(PredatorArr, matrix, PredatorLifeArr);
+            this.die(PredatorMaleArr, matrix, PredatorMaleLifeArr);
         }
     }
 
-    die(PredatorArr, matrix, PredatorLifeArr) {
+    die(PredatorFemaleArr, matrix, PredatorFemaleLifeArr) {
         this.getNewCoordinates();
         matrix[this.y][this.x] = 0;
 
-        for (var i in PredatorArr) {
-            if (this.x == PredatorArr[i].x && this.y == PredatorArr[i].y) {
-                PredatorArr.splice(i, 1);
+        for (var i in PredatorFemaleArr) {
+            if (this.x == PredatorFemaleArr[i].x && this.y == PredatorFemaleArr[i].y) {
+                PredatorFemaleArr.splice(i, 1);
             }
         }
-        PredatorLifeArr[1]++;
+        PredatorFemaleLifeArr[1]++;
     }
 
-    eat(PredatorArr, GrassEaterMaleArr, GrassEaterFemaleArr, matrix, GrassEaterMaleLifeArr, GrassEaterFemaleLifeArr, PredatorLifeArr) {
+    eat(PredatorFemaleArr, GrassEaterMaleArr, GrassEaterFemaleArr, matrix, GrassEaterMaleLifeArr, GrassEaterFemaleLifeArr, PredatorFemaleLifeArr) {
         var fundCords = this.chooseCell(-1, 2, -2, matrix);
         var cord = this.random(fundCords);
 
@@ -102,29 +102,29 @@ module.exports = class Predator {
             this.energy++;
 
             if (this.multiply == 10) {
-                this.mul(PredatorArr, matrix, PredatorLifeArr)
+                this.mul(PredatorFemaleArr, matrix, PredatorFemaleLifeArr)
                 this.multiply = 0;
             }
         }
         else {
-            this.move(PredatorArr, matrix);
+            this.move(PredatorFemaleArr, matrix);
             this.energy--;
             if (this.energy < 1) {
-                this.die(PredatorArr, matrix, PredatorLifeArr);
+                this.die(PredatorFemaleArr, matrix, PredatorFemaleLifeArr);
             }
         }
     }
-    mul(PredatorArr, matrix, PredatorLifeArr) {
+    mul(PredatorFemaleArr, matrix, PredatorFemaleLifeArr) {
         var emptyCells = this.chooseCell(0, 1, 99, matrix);
         var newCell = this.random(emptyCells);
         if (newCell) {
             var newX = newCell[0];
             var newY = newCell[1];
             matrix[newY][newX] = this.index;
-            var Newxotakereat = new Predator(newX, newY, this.index);
-            PredatorArr.push(Newxotakereat);
+            var NewPredatorMale = new PredatorFemale(newX, newY, this.index);
+            PredatorFemaleArr.push(NewPredatorMale);
 
-            PredatorLifeArr[0]++;
+            PredatorFemaleLifeArr[0]++;
         }
     }
 }

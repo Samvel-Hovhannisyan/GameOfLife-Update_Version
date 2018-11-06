@@ -13,7 +13,8 @@ var io = require("socket.io")(server);
 var Grass = require("./modules/class.grass.js");
 var GrassEaterMale = require("./modules/class.GrassEaterMale.js");
 var GrassEaterFemale = require("./modules/class.GrassEaterFemale.js");
-var Predator = require("./modules/class.predator.js");
+var PredatorMale = require("./modules/class.PredatorMale.js");
+var PredatorFemale = require("./modules/class.PredatorFemale.js");
 var Cool = require("./modules/class.cool.js");
 var Tornado = require("./modules/class.tornado.js");
 var Water = require("./modules/class.water.js");
@@ -23,7 +24,8 @@ var Water = require("./modules/class.water.js");
 var grassArr = [];
 var GrassEaterMaleArr = [];
 var GrassEaterFemaleArr = [];
-var PredatorArr = [];
+var PredatorMaleArr = [];
+var PredatorFemaleArr = [];
 var coolArr = [];
 var tornadoArr = [];
 var waterArr = [];
@@ -33,7 +35,8 @@ var waterArr = [];
 var grassLifeArr = [0, 0];
 var GrassEaterMaleLifeArr = [0, 0];
 var GrassEaterFemaleLifeArr = [0, 0];
-var PredatorLifeArr = [0, 0];
+var PredatorMaleLifeArr = [0, 0];
+var PredatorFemaleLifeArr = [0, 0];
 var tornadoLifeArr = [0, 0];
 var coolLifeArr = [0, 0];
 var waterLifeArr = [0, 0];
@@ -60,7 +63,10 @@ for (var y = 0; y < matrix.length; y++) {
       GrassEaterFemaleArr.push(new GrassEaterFemale(x, y, -2, matrix));
     }
     else if (matrix[y][x] == 3) {
-      PredatorArr.push(new Predator(x, y, 3, matrix));
+      PredatorMaleArr.push(new PredatorMale(x, y, 3, matrix));
+    }
+    else if (matrix[y][x] == -3) {
+      PredatorFemaleArr.push(new PredatorFemale(x, y, -3, matrix));
     }
     else if (matrix[y][x] == 4) {
       coolArr.push(new Cool(x, y, 4, matrix));
@@ -107,14 +113,17 @@ io.on("connection", function (socket) {
     for (var i in GrassEaterFemaleArr) {
       GrassEaterFemaleArr[i].eat(GrassEaterFemaleArr, grassArr, matrix, grassLifeArr, GrassEaterFemaleLifeArr);
     }
-    for (var i in PredatorArr) {
-      PredatorArr[i].eat(PredatorArr, GrassEaterMaleArr, GrassEaterFemaleArr, matrix, GrassEaterMaleLifeArr, GrassEaterFemaleLifeArr, PredatorLifeArr);
+    for (var i in PredatorMaleArr) {
+      PredatorMaleArr[i].eat(PredatorMaleArr, GrassEaterMaleArr, GrassEaterFemaleArr, matrix, GrassEaterMaleLifeArr, GrassEaterFemaleLifeArr, PredatorMaleLifeArr);
+    }
+    for (var i in PredatorFemaleArr) {
+      PredatorFemaleArr[i].eat(PredatorFemaleArr, GrassEaterMaleArr, GrassEaterFemaleArr, matrix, GrassEaterMaleLifeArr, GrassEaterFemaleLifeArr, PredatorFemaleLifeArr);
     }
     for (var i in coolArr) {
-      coolArr[i].eat(PredatorArr, matrix, PredatorLifeArr);
+      coolArr[i].eat(PredatorMaleArr, PredatorFemaleArr, matrix, PredatorMaleLifeArr, PredatorFemaleLifeArr);
     }
     for (var i in tornadoArr) {
-      tornadoArr[i].eat(tornadoArr, grassArr, GrassEaterMaleArr, GrassEaterFemaleArr, PredatorArr, matrix, grassLifeArr, GrassEaterMaleLifeArr, GrassEaterFemaleLifeArr, PredatorLifeArr);
+      tornadoArr[i].eat(grassArr, GrassEaterMaleArr, GrassEaterFemaleArr, PredatorMaleArr, PredatorFemaleArr, matrix, grassLifeArr, GrassEaterMaleLifeArr, GrassEaterFemaleLifeArr, PredatorMaleLifeArr, PredatorFemaleLifeArr);
     }
     for (var i in waterArr) {
       waterArr[i].mul(waterArr, matrix, waterLifeArr);
@@ -142,7 +151,8 @@ io.on("connection", function (socket) {
   grassLifeArr[0] += grassArr.length;
   GrassEaterMaleLifeArr[0] += GrassEaterMaleArr.length;
   GrassEaterFemaleLifeArr[0] += GrassEaterFemaleArr.length;
-  PredatorLifeArr[0] += PredatorArr.length;
+  PredatorMaleLifeArr[0] += PredatorMaleArr.length;
+  PredatorFemaleLifeArr[0] += PredatorFemaleArr.length;
   tornadoLifeArr[0] += tornadoArr.length;
   coolLifeArr[0] += coolArr.length;
   waterLifeArr[0] += waterArr.length;
