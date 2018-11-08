@@ -63,7 +63,6 @@ module.exports = class GrassEaterMale extends Parent {
             this.energy++;
 
             if (this.multiply == 7) {
-                this.mul(GrassEaterMaleArr, matrix, GrassEaterMaleLifeArr)
                 this.multiply = 0;
             }
             if (this.energy < 5) {
@@ -74,19 +73,6 @@ module.exports = class GrassEaterMale extends Parent {
             this.move(GrassEaterMaleArr, matrix, GrassEaterMaleLifeArr);
             this.energy--;
 
-        }
-    }
-    mul(GrassEaterMaleArr, matrix, GrassEaterMaleLifeArr) {
-        var emptyCells = this.chooseCell(1, matrix);
-        var newCell = this.random(emptyCells);
-        if (newCell) {
-            var newX = newCell[0];
-            var newY = newCell[1];
-            matrix[newY][newX] = this.index;
-            var NewGrassEatMale = new GrassEaterMale(newX, newY, this.index);
-            GrassEaterMaleArr.push(NewGrassEatMale);
-
-            GrassEaterMaleLifeArr[0]++;
         }
     }
 }

@@ -76,6 +76,9 @@ module.exports = class PredatorFemale {
         var fundCords = this.chooseCell(-1, 2, -2, matrix);
         var cord = this.random(fundCords);
 
+        var found = this.chooseCell(3, matrix);
+        var cell = this.random(found);
+
         if (cord) {
             var x = cord[0];
             var y = cord[1];
@@ -101,9 +104,8 @@ module.exports = class PredatorFemale {
             this.multiply++;
             this.energy++;
 
-            if (this.multiply == 10) {
+            if (cell) {
                 this.mul(PredatorFemaleArr, matrix, PredatorFemaleLifeArr)
-                this.multiply = 0;
             }
         }
         else {

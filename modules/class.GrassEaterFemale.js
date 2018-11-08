@@ -2,7 +2,7 @@ var Parent = require("./class.parent.js");
 module.exports = class GrassEaterFemale extends Parent {
     constructor(x, y, index) {
         super(x, y, index);
-        this.energy = 8;
+        this.energy = 25;
     }
     chooseCell(character, matrix) {
         this.getNewCoordinates();
@@ -11,6 +11,13 @@ module.exports = class GrassEaterFemale extends Parent {
     move(GrassEaterFemaleArr, matrix, GrassEaterFemaleLifeArr) {
         var fundCords = this.chooseCell(0, matrix);
         var cord = this.random(fundCords);
+
+        var found = this.chooseCell(2, matrix);
+        var cell = this.random(found);
+
+        if (cell){
+            this.mul(GrassEaterFemaleArr, matrix, GrassEaterFemaleLifeArr);
+        }
 
         if (cord) {
             var x = cord[0];
@@ -41,6 +48,9 @@ module.exports = class GrassEaterFemale extends Parent {
         var fundCords = this.chooseCell(1, matrix);
         var cord = this.random(fundCords);
 
+        var found = this.chooseCell(2, matrix);
+        var cell = this.random(found);
+
         if (cord) {
             var x = cord[0];
             var y = cord[1];
@@ -62,12 +72,11 @@ module.exports = class GrassEaterFemale extends Parent {
 
             this.energy++;
 
-            if (this.multiply == 7) {
-                this.mul(GrassEaterFemaleArr, matrix, GrassEaterFemaleLifeArr)
-                this.multiply = 0;
-            }
             if (this.energy < 5) {
                 this.die(GrassEaterFemaleArr, matrix, GrassEaterFemaleLifeArr);
+            }
+            if (cell){
+                this.mul(GrassEaterFemaleArr, matrix, GrassEaterFemaleLifeArr);
             }
         }
         else {

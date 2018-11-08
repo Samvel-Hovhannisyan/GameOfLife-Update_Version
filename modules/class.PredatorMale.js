@@ -114,17 +114,4 @@ module.exports = class PredatorMale {
             }
         }
     }
-    mul(PredatorMaleArr, matrix, PredatorMaleLifeArr) {
-        var emptyCells = this.chooseCell(0, 1, 99, matrix);
-        var newCell = this.random(emptyCells);
-        if (newCell) {
-            var newX = newCell[0];
-            var newY = newCell[1];
-            matrix[newY][newX] = this.index;
-            var NewPredatorMale = new PredatorMale(newX, newY, this.index);
-            PredatorMaleArr.push(NewPredatorMale);
-
-            PredatorMaleLifeArr[0]++;
-        }
-    }
 }
